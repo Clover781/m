@@ -1,0 +1,162 @@
+local Translations = {
+    ["Toggle"]="开关",
+    ["AX-SCRIPTS"]="AX-脚本(人机翻译)",
+    ["Cames"]="游戏功能",
+    ["Combat"]="攻击",
+    ["Miscs"]="杂项",
+    ["Players"]="玩家",
+    ["Guards"]="守卫",
+    ["Settings"]="设置",
+    ["Red Light, Green Light"]="木头人",
+    ["Auto Stop"]="自动停止",
+    ["Disable Injury"]="移除受伤状态",
+    ["Finish RLGL"]="传送到木头人终点",
+    ["Dalgona"]="扣糖饼",
+    ["Anti Crack"]="防止抠坏",
+    ["Get Lighter"]="得到免费打火机",
+    ["Auto Dalgona"]="自动扣糖饼",
+    ["Auto Dalgona V2"]="自动扣糖饼V2(不能用)",
+    ["Lights Out"]="熄灯",
+    ["Safe Zone"]="传送到安全位置",
+    ["Tug of War"]="拔河",
+    ["Rope Pull Mode"]="自动拔河力度",
+    ["Normal"]="正常",
+    ["没找到素材"]="疯狂",
+    ["Pull Rope"]="满级拉力",
+    ["Hide N' Seek"]="刀和钥匙",
+    ["Show Exit Doors (Yellow)"]="透视逃生门(黄色)",
+    ["Show Doors (Green I Cir/Tri/Sqr)"]="透视门(绿色)",
+    ["Show Dropped Keys (Purple)"]="透视钥匙(紫色)",
+    ["Show Staircases (Brown)"]="透视楼梯(棕色)",
+    ["Show Spikes (Black)"]="透视尖刺陷阱(黑色)",
+    ["Pickup Keys"]="自动捡钥匙",
+    ["Auto Escape"]="自动格挡",
+    ["Auto Dodge"]="自动攻击",
+    ["Infinite Stamina"]="无限耐力",
+    ["Fast Sprint"]="解锁快速冲刺",
+    ["Disable Spikes"]="禁用尖刺(意思就是尖刺伤害不了自己)",
+    ["Teleport to Hider"]="传送到蓝色方",
+    ["Teleport to Seeker"]="传送到红色方",
+    ["Select Exit Door"]="传送到逃生门",
+    ["Glass Bridge"]="玻璃桥",
+    ["Reveal Safe & Fake Glass"]="透视玻璃",
+    ["Anti Break Class"]="防止掉落",
+    ["Cinicb Clsee Dride"]="传送到玻璃桥终点",
+    ["Auto Ddakji (Remote)"] = "自动打画片(不用操作)",
+    ["Auto飞行ing Stone (Remote)"]="自动打石子(不用操作)",
+    ["Auto Gonggi (Remote)"]="自动抓石子(不用操作)",
+    ["Auto Spinning Top (Remote)"]="自动陀螺(不用操作)",
+    ["Auto Jegi (Remote)"]="自动踢毽子(不用操作)",
+    ["Gonggi Auto QTE"]="自动抓石子",
+    ["Spinning Top Auto Balance"]="自动陀螺",
+}
+
+local function translateText(text)
+    if not text or type(text) ~= "string" then return text end
+    if Translations[text] then return Translations[text] end
+    local translated = text
+    for en, cn in pairs(Translations) do
+        translated = translated:gsub(en, cn)
+    end
+    return translated
+end
+
+local translatedElements = {}
+local originalTexts = {}
+
+local function safeTranslateElement(element)
+    if translatedElements[element] then return end
+    
+    pcall(function()
+        if element:IsA("TextLabel") or element:IsA("TextButton") or element:IsA("TextBox") then
+            local currentText = element.Text
+            if currentText and currentText ~= "" then
+                if not originalTexts[element] then
+                    originalTexts[element] = currentText
+                end
+                
+                local translatedText = translateText(currentText)
+                if translatedText ~= currentText then
+                    element.Text = translatedText
+                    translatedElements[element] = true
+                end
+            end
+        end
+    end)
+end
+
+local function reTranslateAllUI()
+    translatedElements = {}
+    for _, gui in ipairs(game:GetService("CoreGui"):GetDescendants()) do
+        safeTranslateElement(gui)
+    end
+    local player = game:GetService("Players").LocalPlayer
+    if player and player:FindFirstChild("PlayerGui") then
+        for _, gui in ipairs(player.PlayerGui:GetDescendants()) do
+            safeTranslateElement(gui)
+        end
+    end
+end
+
+local function setupSmartListener()
+    local function onTextPropertyChanged(element)
+        if translatedElements[element] then
+            local currentText = element.Text
+            local originalText = originalTexts[element]
+            
+            if currentText == originalText or translateText(currentText) == currentText then
+                translatedElements[element] = nil
+                return
+            end
+            
+            local translatedText = translateText(currentText)
+            if translatedText ~= currentText then
+                element.Text = translatedText
+            end
+        else
+            safeTranslateElement(element)
+        end
+    end
+
+    local function addSmartListener(parent)
+        for _, desc in ipairs(parent:GetDescendants()) do
+            safeTranslateElement(desc)
+        end
+        parent.DescendantAdded:Connect(function(descendant)
+            task.wait(0.3)
+            safeTranslateElement(descendant)
+            
+            if descendant:IsA("TextLabel") or descendant:IsA("TextButton") or descendant:IsA("TextBox") then
+                descendant:GetPropertyChangedSignal("Text"):Connect(function()
+                    task.wait(0.1)
+                    onTextPropertyChanged(descendant)
+                end)
+            end
+        end)
+    end
+    
+    pcall(addSmartListener, game:GetService("CoreGui"))
+    local player = game:GetService("Players").LocalPlayer
+    if player and player:FindFirstChild("PlayerGui") then
+        pcall(addSmartListener, player.PlayerGui)
+    end
+end
+
+local function delayedInitialTranslate()
+    task.wait(5)
+    reTranslateAllUI()
+end
+
+task.wait(2)
+setupSmartListener()
+delayedInitialTranslate()
+
+local success, err = pcall(function()
+    loadstring(game:HttpGet("https://officialaxscripts.vercel.app/scripts/AX-Loader.lua"))()
+    task.wait(1.5)
+    reTranslateAllUI()
+end)
+
+if not success then
+    warn("加载失败:", err)
+end
