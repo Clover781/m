@@ -1,0 +1,347 @@
+local RunScriptFirst = false
+
+local Translations = {
+    ["Toggle"]="开关",
+    ["AX-SCRIPTS"]="AX-脚本(人机翻译)",
+    ["Games"]="游戏功能",
+    ["Combat"]="攻击",
+    ["Miscs"]="杂项",
+    ["Players"]="玩家",
+    ["Guards"]="守卫",
+    ["Settings"]="设置",
+    ["Red Light, Green Light"]="木头人",
+    ["Auto Stop"]="自动停止",
+    ["Disable Injury"]="移除受伤状态",
+    ["Finish RLGL"]="传送到木头人终点",
+    ["Dalgona"]="扣糖饼",
+    ["Anti Crack"]="防止抠坏",
+    ["Get Lighter"]="得到免费打火机",
+    ["Auto Dalgona"]="自动扣糖饼",
+    ["Auto Dalgona V2"]="自动扣糖饼V2(不能用)",
+    ["Lights Out"]="熄灯",
+    ["Safe Zone"]="传送到安全位置",
+    ["Tug of War"]="拔河",
+    ["Rope Pull Mode"]="自动拔河力度",
+    ["Normal"]="正常",
+    ["没找到素材"]="疯狂",
+    ["Pull Rope"]="满级拉力",
+    ["Hide N' Seek"]="刀和钥匙",
+    ["Show Exit Doors (Yellow)"]="透视逃生门(黄色)",
+    ["Show Doors (Green | Cir/Tri/Sqr)"]="透视门(绿|圆/三角/正方)",
+    ["Show Dropped Keys (Purple)"]="透视钥匙(紫色)",
+    ["Show Staircases (Brown)"]="透视楼梯(棕色)",
+    ["Show Spikes (Black)"]="透视尖刺陷阱(黑色)",
+    ["Pickup Keys"]="自动捡钥匙",
+    ["Auto Escape"]="自捡钥匙2",
+    ["Auto Dodge"]="自动格挡",
+    ["Infinite Stamina"]="无限耐力",
+    ["Fast Sprint"]="解锁快速冲刺",
+    ["Spikes Kill"]="尖刺陷阱击杀",
+    ["Disable Spikes"]="禁用尖刺(意思就是尖刺伤害不了自己)",
+    ["Teleport to Hider"]="传送到蓝色方",
+    ["Teleport to Seeker"]="传送到红色方",
+    ["Select Exit Door"]="选择逃生门",
+    ["Teleport to Exit Door"]="传送到逃生门",
+    ["Rebel"]="反叛",
+    ["Auto Shoot 守卫"]="自动攻击守卫",
+    ["Wall Check"]="墙壁检测",
+    ["守卫 Hitbox + ESP"]="守卫碰撞箱和位置",
+    ["Hitbox Size"]="碰撞箱大小",
+    ["Hitbox Transparency"]="碰撞箱透明度",
+    ["Last Dinner"]="最后的晚餐",
+    ["Zone Kill"]="杀戮范围",
+    ["Squid Game"]="螃蟹游戏",
+    ["Get Rock"]="自动获得石头",
+    ["Pentathlon"]="五猪六傻",
+    ["Glass Bridge"]="玻璃桥",
+    ["Reveal Safe & Fake Glass"]="透视玻璃",
+    ["Anti Break Glass"]="防止掉落",
+    ["Finish Glass Bridge"]="传送到玻璃桥终点",
+    ["Jump Rope"]="跳绳",
+    ["Finish Jump Rope"]="传送到跳绳终点",
+    ["Disable Game"]="禁用游戏",
+    ["Simulate Balance"]="一直平衡",
+    ["Auto Jump"]="自动跳(有时候挑不起来)",
+    ["Fix Broken Tracks"]="修复桥梁",
+    ["Unlimited Chances"]="无限机会",
+    ["Bypass Rope"]="删除绳子",
+    ["Auto Balance"]="自动平衡",
+    ["Press Speed"]="点击速度",
+    ["Randomize Press Speed"]="随机速度",
+    ["Sky Squid Game"]="天空游戏",
+    ["Press Button"]="自动按按钮",
+    ["Get Pole"]="自动得到棍子",
+    ["Anti Fall"]="防止摔倒(就是被打下时停半空)",
+    ["Void Kill"]="虚空杀人",
+    ["Auto Ddakji (Remote)"] = "自动打画片(不用操作)",
+    ["Auto Flying Stone (Remote)"]="自动打石子(不用操作)",
+    ["Auto Gonggi (Remote)"]="自动抓石子(不用操作)",
+    ["Auto Spinning Top (Remote)"]="自动陀螺(不用操作)",
+    ["Auto Jegi (Remote)"]="自动踢毽子(不用操作)",
+    ["Auto Flying Stone"]="自动打石头",
+    ["Gonggi Auto QTE"]="抓石子时自动QTE",
+    ["Gonggi QTE Speed"]="抓石子QTE速度",
+    ["Randomize QTE Speed"]="随机QTE速度",
+    ["Spinning Top Auto Balance"]="自动陀螺",
+    ["Spinning Top Speed"]="陀螺平衡速度",
+    ["Randomize Balance Speed"]="随机陀螺平衡速度",
+    ["Guard Aimlock"]="守卫攻击方向",
+    ["Closest"]="离得最近的",
+    ["LookingAt"]="看到的位置",
+    ["Aimlock"]="瞄准锁定",
+    ["Aimlock Mode"]="瞄准锁定模式",
+    ["Auto Shoot"]="自动攻击",
+    ["Auto Shoot Mode"]="自动攻击模式",
+    ["Legit"]="正常",
+    ["Rage"]="狂暴",
+    ["Select Guns"]="枪械品种",
+    ["No Recoil"]="没有后座力",
+    ["Bullets"]="子弹数量",
+    ["Fire Rate CD"]="射速CD",
+    ["Range"]="范围",
+    ["Run Speed"]="运行速度(看不懂后面改)",
+    ["Scope FOV"]="范围视野",
+    ["Bullets Per Fire"]="每次射击的子弹",
+    ["Bullet Size"]="子弹大小(美国子弹自己就能打到人)",
+    ["Auto Shoot (Silent Aim)"]="自动攻击(别人听不到声音但是可以被受到伤害容易被发现)",
+    ["Guns"]="枪械",
+    ["Modded Guns"]="枪械加成",
+    ["Utilities"]="实用",
+    ["Guard Shape"]="守卫三种形态",
+    ["Circle"]="骚圆型",
+    ["Triangle"]="黑奴三角形",
+    ["Square"]="正方形",
+    ["Spawn as Guard"]="自动抢守卫",
+    ["Insta Claw Machine"]="自动打娃娃机",
+    ["Insta Arcade (works outside the game)"]="自动打街机游戏(局外)",
+    ["Player Info"]="玩家信息",
+    ["Select Player"]="选择玩家",
+    ["Biggest Threat"]="最大危险",
+    ["Hitbox"]="碰撞箱",
+    ["反叛 Hitbox"]="反叛玩家碰撞箱",
+    ["碰撞箱 Expander"]="扩大碰撞箱",
+    ["Select a player to view info"]="选择玩家查看信息",
+    ["守卫 碰撞箱 + ESP"]="守卫碰撞箱+位置",
+    ["Key System"]="卡密系统",
+    ["Authentication"]="卡密认证",
+    ["Enter Key"]="输入卡密",
+    ["Get Key (Linkvertise)"]="得到卡密(比较推荐)",
+    ["Get Key (Work Ink)"]="得到卡密(不推荐)",
+    ["Check Key"]="检查卡密",
+    ["Join Discord"]="加入DC",
+    ["Open Keybind Menu"]="打开菜单自动绑定钥匙(强制开启)",
+    ["Enable Crosshair"]="能用十字瞄准(都是因为他才有了漏洞)",
+    ["Lock Button (Mobile)"]="锁定按钮(能动)",
+    ["Notification Side"]="十字拖架",
+    ["Top-Right"]="右上角",
+    ["DPI Scale"]="菜单占比",
+    ["Menu bind"]="菜单绑定",
+    ["Unload"]="卸载",
+    ["Themes"]="主题",
+    ["Background color"]="背景颜色",
+    ["Main color"]="主色调",
+    ["Accent color"]="强色调",
+    ["Outline color"]="轮廓颜色",
+    ["Font color"]="字体颜色",
+    ["Font Face"]="客户端字体",
+    ["Theme list"]="主题列表",
+    ["Default"]="默认",
+    ["Set as default"]="设置为默认",
+    ["Custom theme name"]="自己给文件名字",
+    ["Create theme"]="创建文件",
+    ["Custom themes"]="自定义文件",
+    ["Load theme"]="加载文件",
+    ["Overwrite theme"]="覆盖文件",
+    ["Delete theme"]="删除文件",
+    ["Refresh list"]="刷新列表",
+    ["Set as default"]="设置为默认(指的是文件",
+    ["Reset default"]="重置默认",
+    ["Configuration"]="配置",
+    ["Config name"]="配置名字",
+    ["Create config"]="创建配置",
+    ["Config list"]="配置列表",
+    ["Load config"]="加载配置",
+    ["Overwrite config"]="覆盖配置",
+    ["Delete config"]="删除配置",
+    ["Refresh list"]="刷新列表",
+    ["Set as autoload"]="设置成自动加载",
+    ["Reset autoload"]="重置自动加载",
+    ["Current autoload config: none"]="当前自动加载配置:无",
+    ["Noclip"] = "玩家", 
+    ["Fly"] = "飞行", 
+    ["Anti Void"] = "防虚空", 
+    ["Noclip"] = "穿墙", 
+    ["Hide Nametag"] = "隐藏称号", 
+    ["Hide Other Nametags"] = "隐藏其他标签", 
+    ["Select Title"] = "选择称号", 
+    ["Equip Title"] = "装备称号", 
+    ["Select Power"] = "选择力量", 
+    ["Custom Titles"] = "自定义称号", 
+    ["Parkour Artist Mods"] = "强化跑酷大师", 
+    ["Equip Power"] = "装备能力", 
+    ["Disable Dash Cooldown"] = "无冷却冲刺",
+    ["Emotes"] = "表情", 
+    ["Select Emote"] = "选择表情", 
+    ["Emote Speed"] = "速度", 
+    ["Play/Pause Emote"] = "做/停止做动作", 
+    ["Extras"] = "附加内容", 
+    ["Select Vote"] = "选择投票选项", 
+    ["Auto Vote"] = "自动投票", 
+    ["QTE Mode"] = "QTE模式", 
+    ["Ultra Rage"] = "超级狂暴模式", 
+    ["Boosts"] = "提升", 
+    ["Damage Boost (NOT FE)"] = "伤害调节", 
+    ["Faster Sprint (6+ TO UNLOCK DASH)"] = "速度调节（不要用）", 
+    ["Won Boost (NOT FE)"] = "调节胜利次数", 
+    ["Spectate"] = "启用观战模式", 
+    ["Disable Stun"] = "无眩晕", 
+    ["Anti Ragdoll"] = "移出受伤效果", 
+    ["Gamepasses (NOT FE)"] = "游戏通行证", 
+    ["Enable VIP"] = "获得VIP功能", 
+    ["Auto QTE"] = "自动按QTE", 
+    ["Auto Skip Dialogue"] = "自动跳过对话", 
+    ["Auto Next Game"] = "自动下一个游戏", 
+    ["Disable Effects"] = "禁用效果", 
+    ["Low GFX"] = "提高帧数", 
+    ["Fullbright"] = "夜视/高亮", 
+    ["Pickup Bandages"] = "自动捡绷带", 
+    ["FOV Changer"] = "视野调节", 
+    ["Instant Interact"] = "即时互动", 
+    ["Lobby"] = "大厅", 
+    ["Glass Manufacturer Vision"] = "解锁玻璃制造商", 
+    ["2x Vote Count"] = "解锁双倍投票",
+    ["Custom Player Tag"] = "玩家自定义标签", 
+    ["Emote Pages"] = "解锁表情彩单", 
+    ["Private Server+"] = "解锁私人服务器", 
+    ["Permanent Guard"] = "解锁守卫", 
+    ["Custom Player Tag (NOT FE)"] = "自定义玩家标签", 
+    ["Set a custom tag"] = "设置自定义标签", 
+    ["Enter custom number"] = "请输入文本", 
+    ["Security"] = "安全", 
+    ["Anti AFK"] = "防AFK", 
+    ["Staff Detector"] = "检测管理员", 
+    ["Auto New Round"] = "自动新一轮", 
+    ["Auto Return Lobby"] = "自动返回大厅", 
+    ["Auto Unlock Rewards"] = "自动解锁奖励", 
+    ["Teleport"]="瞬移",
+    ["Random"]="随机",
+    ["Teleport to Target"]="传送到目标",
+    ["Quick Teleport"]="快速传送",
+    ["Auto Attack"]="自动攻击",
+    ["Lowest Health"]="最低血量显示",
+    ["Specific Player"]="指定玩家",
+    ["Facing"]="面对",
+    ["Face Target"]="人的方向",
+    ["HNS Mode"]="躲猫猫模式",
+    ["Attach"]="吸附",
+    ["Attach Target"]="吸附目标",
+    ["HNS Mode"]="躲猫猫模式",
+    ["Select Target Player"]="选择玩家",
+    ["Random"]="随机",
+    ["ESP"]="透视",
+    ["Enable ESP"]="开始透视",
+    ["Box Fill, Box Outline,..."]="方框填充，方框轮廓",
+    ["Tracer Mode"]="跟踪模式",
+    ["Over Head"]="头顶",
+    ["Target"]="目标",
+    ["Whitelist"]="白名单",
+    ["Weapons to auto equip"]="自动装备武器",
+    ["Auto Equip Tool"]="自动装备工具",
+    ["Show 范围"]="显示范围",
+    ["ESP Distance"]="透视距离",
+    ["100 studs/5000 studs"]="100米/5000米",
+    ["ESP Performance Mode"]="透视性能模式",
+    ["Search"] = "搜索", 
+    ["Show Only My Team"]="仅显示自己的队伍",
+    ["Show Only Enemy Team"]="仅显示敌方队伍",
+    ["Trail"]="跟踪",
+    ["Ink Game | by AlexScriptX"] = "人机汉化", 
+    ["Troll"]="必输",
+    ["Manual"]="失误",
+    ["Perfect"]="完美",
+}
+
+local function translateText(text)
+    if not text or type(text) ~= "string" then return text end
+    if Translations[text] then return Translations[text] end
+    for en, cn in pairs(Translations) do
+        if text:find(en) then return text:gsub(en, cn) end
+    end
+    return text
+end
+
+local function translateAllElements()
+    local function translateGui(gui)
+        for _, element in ipairs(gui:GetDescendants()) do
+            if element:IsA("TextLabel") or element:IsA("TextButton") or element:IsA("TextBox") then
+                local currentText = element.Text
+                if currentText and currentText ~= "" then
+                    local translatedText = translateText(currentText)
+                    if translatedText ~= currentText then
+                        element.Text = translatedText
+                    end
+                end
+            end
+        end
+    end
+    
+    pcall(translateGui, game:GetService("CoreGui"))
+    
+    local player = game:GetService("Players").LocalPlayer
+    if player and player:FindFirstChild("PlayerGui") then
+        pcall(translateGui, player.PlayerGui)
+    end
+end
+
+local function setupListener()
+    local function connectToGui(gui)
+        gui.DescendantAdded:Connect(function(descendant)
+            if descendant:IsA("TextLabel") or descendant:IsA("TextButton") or descendant:IsA("TextBox") then
+                local currentText = descendant.Text
+                if currentText and currentText ~= "" then
+                    local translatedText = translateText(currentText)
+                    if translatedText ~= currentText then
+                        descendant.Text = translatedText
+                    end
+                end
+            end
+        end)
+    end
+    
+    pcall(connectToGui, game:GetService("CoreGui"))
+    
+    local player = game:GetService("Players").LocalPlayer
+    if player and player:FindFirstChild("PlayerGui") then
+        pcall(connectToGui, player.PlayerGui)
+    end
+end
+
+local function startTranslation()
+    translateAllElements()
+    setupListener()
+    
+    spawn(function()
+        while true do
+            wait(2)
+            translateAllElements()
+        end
+    end)
+end
+
+local function loadScript()
+    local success, err = pcall(function()
+        loadstring(game:HttpGet("https://officialaxscripts.vercel.app/scripts/AX-Loader.lua"))()
+    end)
+
+    if not success then
+        warn("加载失败:", err)
+    end
+end
+
+if RunScriptFirst then
+    loadScript()
+    startTranslation()
+else
+    startTranslation()
+    loadScript()
+end
